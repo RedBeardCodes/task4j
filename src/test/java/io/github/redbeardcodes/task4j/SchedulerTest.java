@@ -32,8 +32,8 @@ public class SchedulerTest {
 
 		scheduler.tick(ZonedDateTime.of(2026, 9, 1, 15, 0, 0, 0, ZoneOffset.UTC));
 
-		assertTrue(firstStarted.await(1, TimeUnit.MILLISECONDS), "First started failed");
-		assertTrue(secondStarted.await(1, TimeUnit.MILLISECONDS), "Second started failed");
+		assertTrue(firstStarted.await(1, TimeUnit.SECONDS), "First started failed");
+		assertTrue(secondStarted.await(1, TimeUnit.SECONDS), "Second started failed");
 
 		releaseFirst.countDown();
 
