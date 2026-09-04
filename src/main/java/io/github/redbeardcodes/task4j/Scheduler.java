@@ -37,12 +37,12 @@ public final class Scheduler implements AutoCloseable {
 				.withSecond(0)
 				.withNano(0);
 
-			dispatch(now);
+			tick(now);
 			sleepUntilNextMinute(now);
 		}
 	}
 
-	private void dispatch(ZonedDateTime now) {
+	void tick(ZonedDateTime now) {
 		for(ScheduledTask task : tasks) {
 			if (task.schedule().matches(now)) {
 				Thread.startVirtualThread(task.task());
