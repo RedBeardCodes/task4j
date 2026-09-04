@@ -53,4 +53,22 @@ public class SchedulerTest {
 		assertFalse(executed.await(100, TimeUnit.MILLISECONDS));
 	}
 
+	@Test
+	void taskExceptionDoesNotPreventOtherTasks() throws Exception {
+		var executed = new CountDownLatch(1);
+		var scheduler = new Scheduler(ZoneOffset.UTC);
+
+		scheduler.schedule(
+				Schedules.daily(15, 0),
+				() -> {
+					throw new RuntimeException("boom");
+				});
+		scheduler.schedule(
+				Schedules.daily(15, 0),
+				executed::countDown);
+		scheduler.tick(ZonedDateTime.of(2026, 9, 1, 15, 0, 0, 0, ZoneOffset.UTC));
+		assertTrue(executed.await(1, TimeUnit.SECONDS));
+		scheduler.close();
+	}
+
 }

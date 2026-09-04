@@ -117,7 +117,6 @@ public class ScheduleTest {
 		var schedule = Schedules.monthly(29, 12, 0);
 		assertTrue(schedule.matches(ZonedDateTime.of(2028, 2, 29, 12, 0, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 2, 28, 12, 0, 0, 0, ZoneOffset.UTC)));
-		assertThrows(DateTimeException.class, () -> schedule.matches(ZonedDateTime.of(2026, 2, 29, 12, 0, 0, 0, ZoneOffset.UTC)));
 	}
 
 	@Test

@@ -42,6 +42,13 @@ public final class Scheduler implements AutoCloseable {
 		}
 	}
 
+	public void start() {
+		if (running)
+			return;
+		running = true;
+		schedulerThread.start();
+	}
+
 	void tick(ZonedDateTime now) {
 		for(ScheduledTask task : tasks) {
 			if (task.schedule().matches(now)) {
@@ -65,7 +72,7 @@ public final class Scheduler implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		running = false;
 		schedulerThread.interrupt();
 	}
