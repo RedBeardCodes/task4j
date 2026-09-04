@@ -29,6 +29,7 @@ public class ScheduleTest {
 
 		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 7, 15, 0, 0, 0, ZoneOffset.UTC)));
 		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 14, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 7, 14, 59, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 14, 13, 0, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 15, 15, 0, 0, 0, ZoneOffset.UTC)));
 	}
