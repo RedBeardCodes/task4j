@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -28,8 +29,8 @@ public class ScheduleTest {
 		var schedule = Schedules.weekly(DayOfWeek.MONDAY, 15, 0);
 
 		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 7, 15, 0, 0, 0, ZoneOffset.UTC)));
-		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 14, 15, 0, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 7, 14, 59, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 14, 15, 0, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 14, 13, 0, 0, 0, ZoneOffset.UTC)));
 		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 15, 15, 0, 0, 0, ZoneOffset.UTC)));
 	}
@@ -90,27 +91,33 @@ public class ScheduleTest {
 	}
 
 	@Test
-	public void monthlyThirtyFirstDoesNotMatchApril() {
-		var schedule = Schedules.monthly(31, 12, 0);
-		assertFalse(schedule.matches(ZonedDateTime.of(2026, 4, 30, 12, 0, 0, 0, ZoneOffset.UTC)));
-	}
-
-	@Test
-	public void monthlyThirtyFirstDoesNotMatchFebruary() {
-		var schedule = Schedules.monthly(31, 12, 0);
-		assertFalse(schedule.matches(ZonedDateTime.of(2026, 2, 28, 12, 0, 0, 0, ZoneOffset.UTC)));
-	}
-
-	@Test
-	public void monthlyThirtyFirstMatchesJanuary() {
+	public void monthlyThirtyFirstMatchesMonthsWithThirtyOneDays() {
 		var schedule = Schedules.monthly(31, 12, 0);
 		assertTrue(schedule.matches(ZonedDateTime.of(2026, 1, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 3, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 5, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 7, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 8, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 10, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 12, 31, 12, 0, 0, 0, ZoneOffset.UTC)));
+	}
+
+	@Test
+	public void monthlyThirtyFirstDoesNotMatchMonthsWithoutThirtyOneDays() {
+		var schedule = Schedules.monthly(31, 12, 0);
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 2, 28, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 4, 30, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 6, 30, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 30, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 11, 30, 12, 0, 0, 0, ZoneOffset.UTC)));
 	}
 
 	@Test
 	public void monthlyTwentyNinthMatchesFebruaryLeapYear() {
 		var schedule = Schedules.monthly(29, 12, 0);
 		assertTrue(schedule.matches(ZonedDateTime.of(2028, 2, 29, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 2, 28, 12, 0, 0, 0, ZoneOffset.UTC)));
+		assertThrows(DateTimeException.class, () -> schedule.matches(ZonedDateTime.of(2026, 2, 29, 12, 0, 0, 0, ZoneOffset.UTC)));
 	}
 
 	@Test
