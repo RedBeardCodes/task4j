@@ -34,6 +34,45 @@ public class ScheduleTest {
 	}
 
 	@Test
+	public void weekdayScheduleMatchesCorrectTime() {
+		var schedule = Schedules.weekdays(0, 15);
+
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 3, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 4, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 5, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 6, 0, 15, 0, 0, ZoneOffset.UTC)));
+	}
+
+	@Test
+	public void weekendsScheduleMatchesCorrectTime() {
+		var schedule = Schedules.weekends(0, 15);
+
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 3, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 9, 4, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 5, 0, 15, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 6, 0, 15, 0, 0, ZoneOffset.UTC)));
+	}
+
+	@Test
+	public void monthlyScheduleMatchesCorrectTime() {
+		var schedule = Schedules.monthly(10, 15, 0);
+
+		assertFalse(schedule.matches(ZonedDateTime.of(2026, 1, 9, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 1, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 2, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 3, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 4, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 5, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 6, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 7, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 8, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 9, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 10, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 11, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+		assertTrue(schedule.matches(ZonedDateTime.of(2026, 12, 10, 15, 0, 0, 0, ZoneOffset.UTC)));
+	}
+
+	@Test
 	public void dailyAcceptsBoundaryTimes() {
 		assertDoesNotThrow(() -> Schedules.daily(0, 0));
 		assertDoesNotThrow(() -> Schedules.daily(23, 59));
