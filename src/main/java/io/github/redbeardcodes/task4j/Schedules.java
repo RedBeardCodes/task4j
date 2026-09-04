@@ -44,7 +44,7 @@ public final class Schedules {
 
 	public static Schedule monthly(int day, int hour, int minute) {
 		if (day < 1 || day > 31)
-			throw new IllegalArgumentException("Day must be between 0 and 31: " + day);
+			throw new IllegalArgumentException("Day must be between 1 and 31: " + day);
 
 		checkHour(hour);
 		checkMinute(minute);
@@ -54,7 +54,7 @@ public final class Schedules {
 
 	public static Schedule everyMinute(int interval) {
 		if (interval < 1 || interval > 59)
-			throw new IllegalArgumentException("Interval must be between 0 and 31: " + interval);
+			throw new IllegalArgumentException("Interval must be between 0 and 59: " + interval);
 
 		return new Schedule(every(0, 59, interval), all(0, 23), all(1, 7), all(1, 31), all(1, 12));
 	}
